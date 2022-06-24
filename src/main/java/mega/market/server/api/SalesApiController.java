@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-06-22T11:11:10.456Z[GMT]")
 @RestController
@@ -34,7 +34,7 @@ public class SalesApiController implements SalesApi {
         this.request = request;
     }
 
-    public ResponseEntity<ShopUnitStatisticResponse> salesGet(@NotNull @Parameter(in = ParameterIn.QUERY, description = "Дата и время запроса. Дата должна обрабатываться согласно ISO 8601 (такой придерживается OpenAPI). Если дата не удовлетворяет данному формату, необходимо отвечать 400" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "date", required = true) LocalDateTime date) {
+    public ResponseEntity<ShopUnitStatisticResponse> salesGet(@NotNull @Parameter(in = ParameterIn.QUERY, description = "Дата и время запроса. Дата должна обрабатываться согласно ISO 8601 (такой придерживается OpenAPI). Если дата не удовлетворяет данному формату, необходимо отвечать 400" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "date", required = true) OffsetDateTime date) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {

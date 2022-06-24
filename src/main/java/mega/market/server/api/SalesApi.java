@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-06-22T11:11:10.456Z[GMT]")
 @Validated
@@ -44,7 +44,7 @@ public interface SalesApi {
                                                         schema=@Schema())
                                                        @Valid
                                                        @RequestParam(value = "date", required = true)
-                                                       LocalDateTime date);
+                                                       OffsetDateTime date);
 
 }
 

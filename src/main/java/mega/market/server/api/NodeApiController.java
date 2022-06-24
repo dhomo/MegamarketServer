@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-06-22T11:11:10.456Z[GMT]")
@@ -40,10 +40,10 @@ public class NodeApiController implements NodeApi {
                                                                         @PathVariable("id") UUID id,
 
                                                                         @Parameter(in = ParameterIn.QUERY, description = "Дата и время начала интервала, для которого считается статистика. Дата должна обрабатываться согласно ISO 8601 (такой придерживается OpenAPI). Если дата не удовлетворяет данному формату, необходимо отвечать 400.", schema = @Schema())
-                                                                        @Valid @RequestParam(value = "dateStart", required = false) LocalDateTime dateStart,
+                                                                        @Valid @RequestParam(value = "dateStart", required = false) OffsetDateTime dateStart,
 
                                                                         @Parameter(in = ParameterIn.QUERY, description = "Дата и время конца интервала, для которого считается статистика. Дата должна обрабатываться согласно ISO 8601 (такой придерживается OpenAPI). Если дата не удовлетворяет данному формату, необходимо отвечать 400.", schema = @Schema())
-                                                                        @Valid @RequestParam(value = "dateEnd", required = false) LocalDateTime dateEnd) {
+                                                                        @Valid @RequestParam(value = "dateEnd", required = false) OffsetDateTime dateEnd) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
