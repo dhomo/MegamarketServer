@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +27,7 @@ public class ShopUnitImportRequest   {
 
   @JsonProperty("updateDate")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private LocalDateTime updateDate = null;
+  private OffsetDateTime updateDate = null;
 
   public ShopUnitImportRequest items(List<ShopUnitImport> items) {
     this.items = items;
@@ -55,7 +56,7 @@ public class ShopUnitImportRequest   {
     this.items = items;
   }
 
-  public ShopUnitImportRequest updateDate(LocalDateTime updateDate) {
+  public ShopUnitImportRequest updateDate(OffsetDateTime updateDate) {
     this.updateDate = updateDate;
     return this;
   }
@@ -67,11 +68,11 @@ public class ShopUnitImportRequest   {
   @Schema(example = "2022-05-28T21:12:01Z", description = "Время обновления добавляемых товаров/категорий.")
   
     @Valid
-    public LocalDateTime getUpdateDate() {
+    public OffsetDateTime getUpdateDate() {
     return updateDate;
   }
 
-  public void setUpdateDate(LocalDateTime updateDate) {
+  public void setUpdateDate(OffsetDateTime updateDate) {
     this.updateDate = updateDate;
   }
 

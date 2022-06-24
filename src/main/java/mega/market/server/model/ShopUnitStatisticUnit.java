@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class ShopUnitStatisticUnit   {
 
   @JsonProperty("date")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private LocalDateTime date;
+  private OffsetDateTime date;
 
   public ShopUnitStatisticUnit id(UUID id) {
     this.id = id;
@@ -139,7 +140,7 @@ public class ShopUnitStatisticUnit   {
     this.price = price;
   }
 
-  public ShopUnitStatisticUnit date(LocalDateTime date) {
+  public ShopUnitStatisticUnit date(OffsetDateTime date) {
     this.date = date;
     return this;
   }
@@ -152,11 +153,11 @@ public class ShopUnitStatisticUnit   {
       @NotNull
 
     @Valid
-    public LocalDateTime getDate() {
+    public OffsetDateTime getDate() {
     return date;
   }
 
-  public void setDate(LocalDateTime date) {
+  public void setDate(OffsetDateTime date) {
     this.date = date;
   }
 
