@@ -7,11 +7,8 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * ShopUnitImportRequest
@@ -23,20 +20,20 @@ import java.util.Objects;
 public class ShopUnitImportRequest   {
   @JsonProperty("items")
   @Valid
-  private List<ShopUnitImport> items = null;
+  private Set<ShopUnitImport> items = null;
 
   @JsonProperty("updateDate")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime updateDate = null;
 
-  public ShopUnitImportRequest items(List<ShopUnitImport> items) {
+  public ShopUnitImportRequest items(Set<ShopUnitImport> items) {
     this.items = items;
     return this;
   }
 
   public ShopUnitImportRequest addItemsItem(ShopUnitImport itemsItem) {
     if (this.items == null) {
-      this.items = new ArrayList<ShopUnitImport>();
+      this.items = new HashSet<ShopUnitImport>();
     }
     this.items.add(itemsItem);
     return this;
@@ -48,11 +45,11 @@ public class ShopUnitImportRequest   {
    **/
   @Schema(description = "Импортируемые элементы")
       @Valid
-    public List<ShopUnitImport> getItems() {
+    public Set<ShopUnitImport> getItems() {
     return items;
   }
 
-  public void setItems(List<ShopUnitImport> items) {
+  public void setItems(Set<ShopUnitImport> items) {
     this.items = items;
   }
 

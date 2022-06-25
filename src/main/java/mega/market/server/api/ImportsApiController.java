@@ -5,6 +5,7 @@ import mega.market.server.model.ShopUnitImportRequest;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import mega.market.server.service.ShopUnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -26,15 +27,19 @@ public class ImportsApiController implements ImportsApi {
 
     private final HttpServletRequest request;
 
+    private final ShopUnitService shopUnitService;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public ImportsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public ImportsApiController(ObjectMapper objectMapper, HttpServletRequest request, ShopUnitService shopUnitService) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.shopUnitService = shopUnitService;
     }
 
     public ResponseEntity<Void> importsPost(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody ShopUnitImportRequest body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.OK);
+
+        return shopUnitService.imports(body) ? new ResponseEntity<Void>(HttpStatus.OK) : new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
 }

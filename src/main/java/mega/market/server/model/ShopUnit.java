@@ -10,13 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * ShopUnit
@@ -24,10 +19,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-06-22T11:11:10.456Z[GMT]")
-
 @Entity
-@Table(name = "shop_unit")
+//@Table(name = "shop_unit")
 public class ShopUnit {
     /**
      * Уникальный идентфикатор
@@ -54,7 +47,7 @@ public class ShopUnit {
      *
      * @return date
      **/
-    @Schema(example = "2022-05-28T21:12:01.000Z", required = true, description = "Время последнего обновления элемента.")
+//    @Schema(example = "2022-05-28T21:12:01.000Z", required = true, description = "Время последнего обновления элемента.")
     @NotNull
     @Valid
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -67,7 +60,9 @@ public class ShopUnit {
      **/
     @Schema(example = "3fa85f64-5717-4562-b3fc-2c963f66a333", description = "UUID родительской категории")
     @Valid
-    private UUID parentId;
+    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+    @JoinColumn(referencedColumnName = "id")
+    private ShopUnit parent;
 
     /**
      * Get type
@@ -94,12 +89,12 @@ public class ShopUnit {
      **/
     @Schema(description = "Список всех дочерних товаров\\категорий. Для товаров поле равно null.")
     @Valid
-    @OneToMany
-    private List<ShopUnit> children = null;
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<ShopUnit> children = null;
 
     public ShopUnit addChildrenItem(ShopUnit childrenItem) {
         if (this.children == null) {
-            this.children = new ArrayList<ShopUnit>();
+            this.children = new HashSet<ShopUnit>();
         }
         this.children.add(childrenItem);
         return this;
@@ -114,18 +109,12 @@ public class ShopUnit {
             return false;
         }
         ShopUnit shopUnit = (ShopUnit) o;
-        return Objects.equals(this.id, shopUnit.id) &&
-                Objects.equals(this.name, shopUnit.name) &&
-                Objects.equals(this.date, shopUnit.date) &&
-                Objects.equals(this.parentId, shopUnit.parentId) &&
-                Objects.equals(this.type, shopUnit.type) &&
-                Objects.equals(this.price, shopUnit.price) &&
-                Objects.equals(this.children, shopUnit.children);
+        return Objects.equals(this.id, shopUnit.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, date, parentId, type, price, children);
+        return Objects.hash(id);
     }
 
     @Override
@@ -136,7 +125,7 @@ public class ShopUnit {
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    date: ").append(toIndentedString(date)).append("\n");
-        sb.append("    parentId: ").append(toIndentedString(parentId)).append("\n");
+        sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("    price: ").append(toIndentedString(price)).append("\n");
         sb.append("    children: ").append(toIndentedString(children)).append("\n");
