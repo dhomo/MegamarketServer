@@ -89,8 +89,8 @@ public class ShopUnit {
      **/
     @Schema(description = "Список всех дочерних товаров\\категорий. Для товаров поле равно null.")
     @Valid
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<ShopUnit> children = null;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ShopUnit> children = new LinkedHashSet<>();
 
     public Set<ShopUnit> getChildren() {
         if (type == ShopUnitType.OFFER)

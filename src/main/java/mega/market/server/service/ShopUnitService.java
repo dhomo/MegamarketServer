@@ -62,7 +62,7 @@ public class ShopUnitService {
 
 
         // а сейчас начинаем разираться со cтруктурой
-        Set<ShopUnit> updatedCategorySet = new HashSet<ShopUnit>();
+        Set<ShopUnit> updatedUnitSet = new HashSet<ShopUnit>();
         for (ShopUnitImport shopUnitImport : shopUnitImportRequest.getItems()) {
             ShopUnit shopUnit = shopUnitSet.get(shopUnitImport.getId());
 
@@ -77,27 +77,27 @@ public class ShopUnitService {
             }
 
             if (isParentEquals(oldParent, newParent)) {
-                recalcPrice(updatedCategorySet, oldParent, updateDate);
+                recalcPrice(updatedUnitSet, oldParent, updateDate);
             } else {
+                updatedUnitSet.add(shopUnit);
                 shopUnit.setParentId(shopUnitImport.getParentId());
+                if (oldParent != null) {
+                    oldParent.getChildren().remove(shopUnit);
+                }
                 if (newParent != null) {
                     if (newParent.getType() == ShopUnitType.OFFER) {
                         throw new RuntimeException("родителем товара или категории может быть только категория");
                     }
                     newParent.addChildrenItem(shopUnit);
                 }
-                if (oldParent != null) {
-                    oldParent.getChildren().remove(shopUnit);
-                }
-                recalcPrice(updatedCategorySet, newParent, updateDate);
-                recalcPrice(updatedCategorySet, oldParent, updateDate);
+                recalcPrice(updatedUnitSet, newParent, updateDate);
+                recalcPrice(updatedUnitSet, oldParent, updateDate);
             }
         }
-        shopUnitRepository.saveAll(shopUnitSet.values());
         // может попасть null , убираем его
         // не может, но лучше перебдеть
-        updatedCategorySet.remove(null);
-        shopUnitRepository.saveAll(updatedCategorySet);
+        updatedUnitSet.remove(null);
+        shopUnitRepository.saveAll(updatedUnitSet);
     }
 
     // взвращает самого верхнего в иерархии
@@ -115,7 +115,7 @@ public class ShopUnitService {
             }
             category.setPrice(sum / nullPriceFilteredSet.size());
         }
-        if (updateDate != null){
+        if (updateDate != null) {
             category.setDate(updateDate);
         }
         if (category.getParentId() != null) {
