@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,11 +30,7 @@ public class ShopUnitService {
         if (shopUnit.getParentId() != null) {
             ShopUnit parent = shopUnitRepository.findById(shopUnit.getParentId()).orElseThrow();
             parent.getChildren().remove(shopUnit);
-
-            Set<ShopUnit> updatedCategorySet = new HashSet<ShopUnit>();
-            recalcPrice(updatedCategorySet, parent, null);
-            shopUnitRepository.saveAll(updatedCategorySet);
-
+            recalcPrice(parent, null);
             shopUnitRepository.deleteById(id);
         } else {
             shopUnitRepository.deleteById(id);
@@ -47,11 +44,12 @@ public class ShopUnitService {
     @Transactional
     public void imports(ShopUnitImportRequest shopUnitImportRequest) throws Exception {
         // пока не починю валидацию даты NOT_NULL пусть будет так
-        OffsetDateTime updateDate = Optional.of(shopUnitImportRequest.getUpdateDate()).orElseThrow();
+        Instant updateDate = Optional.of(shopUnitImportRequest.getUpdateDate()).orElseThrow();
 
         // сначала пачкой добавляем и обновляем все что получили, не вникая в структуру
         // иначе можно нарваться на добавление чилдрена раньше парента
-        Map<UUID, ShopUnit> shopUnitSet = new HashMap<UUID, ShopUnit>();
+        Map<UUID, ShopUnit> shopUnitSet = new HashMap<>();
+        Map<UUID, UUID> oldParentUUIDs = new HashMap<>();
         for (ShopUnitImport shopUnitImport : shopUnitImportRequest.getItems()) {
             ShopUnit shopUnit = shopUnitRepository.findById(shopUnitImport.getId()).orElse(new ShopUnit());
             if (shopUnitImport.getType() == ShopUnitType.CATEGORY && shopUnitImport.getPrice() != null) {
@@ -68,55 +66,48 @@ public class ShopUnitService {
             shopUnit.setType(shopUnitImport.getType());
             shopUnit.setName(shopUnitImport.getName());
             shopUnit.setDate(updateDate);
+            // сохраняем UUID старого парента
+            oldParentUUIDs.put(shopUnitImport.getId(), shopUnit.getParentId());
+            shopUnit.setParentId(shopUnitImport.getParentId());
 
             shopUnitSet.put(shopUnitImport.getId(), shopUnit);
         }
         shopUnitRepository.saveAll(shopUnitSet.values());
 
-
         // а сейчас начинаем разираться со cтруктурой
-        Set<ShopUnit> updatedUnitSet = new HashSet<ShopUnit>();
-        for (ShopUnitImport shopUnitImport : shopUnitImportRequest.getItems()) {
-            ShopUnit shopUnit = shopUnitSet.get(shopUnitImport.getId());
+        for (ShopUnit localshopUnit : shopUnitSet.values()) {
+            ShopUnit shopUnit = shopUnitRepository.findById(localshopUnit.getId()).orElseThrow();
 
-            // обрабатываем изменение парента
-            ShopUnit oldParent = null;
-            if (shopUnit.getParentId() != null) {
-                oldParent = shopUnitRepository.findById(shopUnit.getParentId()).orElseThrow();
-            }
-            ShopUnit newParent = null;
-            if (shopUnitImport.getParentId() != null) {
-                newParent = shopUnitRepository.findById(shopUnitImport.getParentId()).orElseThrow();
-            }
-
-            if (isParentEquals(oldParent, newParent)) {
-                recalcPrice(updatedUnitSet, oldParent, updateDate);
-            } else {
-                updatedUnitSet.add(shopUnit);
-                shopUnit.setParentId(shopUnitImport.getParentId());
-                if (oldParent != null) {
-                    oldParent.getChildren().remove(shopUnit);
+            if (isParentEquals(oldParentUUIDs.get(shopUnit.getId()), shopUnit.getParentId())) {
+//              парент не изменился
+                if (shopUnit.getParentId() != null) {
+                    ShopUnit oldParent = shopUnitRepository.findById(shopUnit.getParentId()).orElseThrow();
+                    recalcPrice(oldParent, updateDate);
                 }
-                if (newParent != null) {
+            } else {
+//              обрабатываем изменение парента
+                if (oldParentUUIDs.get(shopUnit.getId()) != null) {
+                    ShopUnit oldParent = shopUnitRepository.findById(oldParentUUIDs.get(shopUnit.getId())).orElseThrow();
+                    oldParent.getChildren().remove(shopUnit);
+                    recalcPrice(oldParent, updateDate);
+                }
+
+                if (shopUnit.getParentId() != null) {
+                    ShopUnit newParent = shopUnitRepository.findById(shopUnit.getParentId()).orElseThrow();
                     if (newParent.getType() == ShopUnitType.OFFER) {
                         throw new RuntimeException("родителем товара или категории может быть только категория");
                     }
                     newParent.addChildrenItem(shopUnit);
+                    recalcPrice(newParent, updateDate);
                 }
-                recalcPrice(updatedUnitSet, newParent, updateDate);
-                recalcPrice(updatedUnitSet, oldParent, updateDate);
             }
         }
-        // может попасть null , убираем его
-        // не может, но лучше перебдеть
-        updatedUnitSet.remove(null);
-        shopUnitRepository.saveAll(updatedUnitSet);
     }
 
     // взвращает самого верхнего в иерархии
-    public void recalcPrice(Set<ShopUnit> updatedCategorySet, ShopUnit category, OffsetDateTime updateDate) {
+    public void recalcPrice(ShopUnit category, Instant updateDate) {
         if (category == null) return;
-        updatedCategorySet.add(category);
+
 
 //      отфильтруем пустые категории
         Set<ShopUnit> nullPriceFilteredSet = category.getChildren().stream().
@@ -132,11 +123,12 @@ public class ShopUnitService {
             category.setDate(updateDate);
         }
         if (category.getParentId() != null) {
-            recalcPrice(updatedCategorySet, shopUnitRepository.findById(category.getParentId()).orElseThrow(), updateDate);
+            recalcPrice(shopUnitRepository.findById(category.getParentId()).orElseThrow(), updateDate);
         }
+        shopUnitRepository.save(category);
     }
 
-    private boolean isParentEquals(ShopUnit oldParent, ShopUnit newParent) {
+    private boolean isParentEquals(UUID oldParent, UUID newParent) {
         return (oldParent == null && newParent == null) ||
                 (oldParent != null && oldParent.equals(newParent));
     }
