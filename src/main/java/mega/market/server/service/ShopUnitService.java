@@ -59,43 +59,48 @@ public class ShopUnitService {
 
 
         // а сейчас начинаем разираться со cтруктурой
-        Set<ShopUnit> shopRootCategorySet = new HashSet<ShopUnit>();
+        Set<ShopUnit> updatedCategorySet = new HashSet<ShopUnit>();
         for (ShopUnitImport shopUnitImport : shopUnitImportRequest.getItems()) {
             ShopUnit shopUnit = shopUnitSet.get(shopUnitImport.getId());
 
             // обрабатываем изменение парента
-            ShopUnit oldParent = shopUnit.getParent();
+            ShopUnit oldParent = null;
+            if (shopUnit.getParentId() != null) {
+                oldParent = shopUnitRepository.findById(shopUnit.getParentId()).orElseThrow();
+            }
             ShopUnit newParent = null;
             if (shopUnitImport.getParentId() != null) {
                 newParent = shopUnitRepository.findById(shopUnitImport.getParentId()).orElseThrow();
             }
 
             if (isParentEquals(oldParent, newParent)) {
-                shopRootCategorySet.add(recalcPrice(oldParent, updateDate));
+                recalcPrice(updatedCategorySet, oldParent, updateDate);
             } else {
-                shopUnit.setParent(newParent);
+                shopUnit.setParentId(shopUnitImport.getParentId());
                 if (newParent != null) {
                     if (newParent.getType() == ShopUnitType.OFFER) {
                         throw new RuntimeException("родителем товара или категории может быть только категория");
                     }
-                    //TODO проверить, возможно это лишнее
                     newParent.addChildrenItem(shopUnit);
                 }
                 if (oldParent != null) {
                     oldParent.getChildren().remove(shopUnit);
                 }
-                shopRootCategorySet.add(recalcPrice(newParent, updateDate));
-                shopRootCategorySet.add(recalcPrice(oldParent, updateDate));
+                recalcPrice(updatedCategorySet, newParent, updateDate);
+                recalcPrice(updatedCategorySet, oldParent, updateDate);
             }
         }
+        shopUnitRepository.saveAll(shopUnitSet.values());
         // может попасть null , убираем его
-        shopRootCategorySet.remove(null);
-        shopUnitRepository.saveAllAndFlush(shopRootCategorySet);
+        // не может, но лучше перебдеть
+        updatedCategorySet.remove(null);
+        shopUnitRepository.saveAll(updatedCategorySet);
     }
 
     // взвращает самого верхнего в иерархии
-    public ShopUnit recalcPrice(ShopUnit category, OffsetDateTime updateDate) {
-        if (category == null) return null;
+    public void recalcPrice(Set<ShopUnit> updatedCategorySet, ShopUnit category, OffsetDateTime updateDate) {
+        if (category == null) return;
+        updatedCategorySet.add(category);
 
 //      отфильтруем пустые категории
         Set<ShopUnit> nullPriceFilteredSet = category.getChildren().stream().
@@ -108,10 +113,8 @@ public class ShopUnitService {
             category.setPrice(sum / nullPriceFilteredSet.size());
         }
         category.setDate(updateDate);
-        if (category.getParent() != null) {
-            return recalcPrice(category.getParent(), updateDate);
-        } else {
-            return category;
+        if (category.getParentId() != null) {
+            recalcPrice(updatedCategorySet, shopUnitRepository.findById(category.getParentId()).orElseThrow(), updateDate);
         }
     }
 

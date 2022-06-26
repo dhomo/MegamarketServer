@@ -60,9 +60,7 @@ public class ShopUnit {
      **/
     @Schema(example = "3fa85f64-5717-4562-b3fc-2c963f66a333", description = "UUID родительской категории")
     @Valid
-    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-    @JoinColumn(referencedColumnName = "id")
-    private ShopUnit parent;
+    private UUID parentId;
 
     /**
      * Get type
@@ -125,7 +123,7 @@ public class ShopUnit {
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    date: ").append(toIndentedString(date)).append("\n");
-        sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+        sb.append("    parent: ").append(toIndentedString(parentId)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("    price: ").append(toIndentedString(price)).append("\n");
         sb.append("    children: ").append(toIndentedString(children)).append("\n");
