@@ -6,6 +6,7 @@ import mega.market.server.model.ShopUnitImport;
 import mega.market.server.model.ShopUnitImportRequest;
 import mega.market.server.model.ShopUnitType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,17 +109,16 @@ public class ShopUnitService {
     public void recalcPrice(ShopUnit category, Instant updateDate) {
         if (category == null) return;
 
+        // напролом и бурелом, разбиратсья в магии гибернейта некогда
+        // очень очень грязный хак что времени осталось пару часов
+        long avg = 0;
+        // от пустой катгории прилетает null
+        try {
+             avg = shopUnitRepository.findAverage(category.getId());
+        } catch (Exception e){}        
 
-//      отфильтруем пустые категории
-        Set<ShopUnit> nullPriceFilteredSet = category.getChildren().stream().
-                filter((s) -> s.getPrice() != null).collect(Collectors.toSet());
-        if (nullPriceFilteredSet.size() > 0) {
-            long sum = 0;
-            for (ShopUnit children : nullPriceFilteredSet) {
-                sum += children.getPrice();
-            }
-            category.setPrice(sum / nullPriceFilteredSet.size());
-        }
+        category.setPrice(avg);
+
         if (updateDate != null) {
             category.setDate(updateDate);
         }
