@@ -5,14 +5,6 @@
  */
 package mega.market.server.api;
 
-//import mega.market.server.model.ShopUnitImportRequest;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import mega.market.server.model.ShopUnitImportRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,20 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-06-22T11:11:10.456Z[GMT]")
 @Validated
 public interface ImportsApi {
 
-    @Operation(summary = "", description = "Импортирует новые товары и/или категории. Товары/категории импортированные повторно обновляют текущие. Изменение типа элемента с товара на категорию или с категории на товар не допускается. Порядок элементов в запросе является произвольным.    - uuid товара или категории является уникальным среди товаров и категорий   - родителем товара или категории может быть только категория   - принадлежность к категории определяется полем parentId   - товар или категория могут не иметь родителя (при обновлении parentId на null, элемент остается без родителя)   - название элемента не может быть null   - у категорий поле price должно содержать null   - цена товара не может быть null и должна быть больше либо равна нулю.   - при обновлении товара/категории обновленными считаются **все** их параметры   - при обновлении параметров элемента обязательно обновляется поле **date** в соответствии с временем обновления   - в одном запросе не может быть двух элементов с одинаковым id   - дата должна обрабатываться согласно ISO 8601 (такой придерживается OpenAPI). Если дата не удовлетворяет данному формату, необходимо отвечать 400.  Гарантируется, что во входных данных нет циклических зависимостей и поле updateDate монотонно возрастает. Гарантируется, что при проверке передаваемое время кратно секундам. ", tags={ "Базовые задачи" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Вставка или обновление прошли успешно."),
-        
-        @ApiResponse(responseCode = "400", description = "Невалидная схема документа или входные данные не верны.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
     @RequestMapping(value = "/imports",
-        produces = { "application/json" }, 
-        consumes = { "application/json" }, 
-        method = RequestMethod.POST)
-    ResponseEntity<Void> importsPost(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody ShopUnitImportRequest body);
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<Void> importsPost(@Valid @RequestBody ShopUnitImportRequest body);
 
 }
 
