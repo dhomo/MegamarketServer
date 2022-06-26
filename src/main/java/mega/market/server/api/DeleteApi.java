@@ -5,13 +5,7 @@
  */
 package mega.market.server.api;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,33 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.constraints.*;
-import java.util.UUID;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-06-22T11:11:10.456Z[GMT]")
 @Validated
 public interface DeleteApi {
 
-    @Operation(summary = "",
-            description = "Удалить элемент по идентификатору. При удалении категории удаляются все дочерние элементы. Доступ к статистике (истории обновлений) удаленного элемента невозможен.  Так как время удаления не передается, при удалении элемента время обновления родителя изменять не нужно.  **Обратите, пожалуйста, внимание на этот обработчик. При его некорректной работе тестирование может быть невозможно.** "
-//            , tags={ "Базовые задачи" }
-            )
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Удаление прошло успешно."),
-        
-        @ApiResponse(responseCode = "400", description = "Невалидная схема документа или входные данные не верны.",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "404", description = "Категория/товар не найден.",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
-    @RequestMapping(value = "/delete/{id}",
-        produces = { "application/json" }, 
-        method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteIdDelete(@Parameter( in = ParameterIn.PATH,
-                                                    description = "Идентификатор",
-                                                    required = true,
-                                                    example = "3fa85f64-5717-4562-b3fc-2c963f66a333",
-                                                    schema = @Schema(type= "string", format= "uuid"))
-                                        @PathVariable("id") String id);
+    @RequestMapping(value = "/delete/{id}", produces = {"application/json"}, method = RequestMethod.DELETE)
+    ResponseEntity<Void> deleteIdDelete(@PathVariable("id") String id);
 
 }
 

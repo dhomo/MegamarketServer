@@ -37,7 +37,6 @@ public class ImportsApiController implements ImportsApi {
     }
 
     public ResponseEntity importsPost(@Valid @RequestBody ShopUnitImportRequest body) {
-        String accept = request.getHeader("Accept");
         try {
             shopUnitService.imports(body);
         } catch (Exception e){

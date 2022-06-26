@@ -6,13 +6,6 @@
 package mega.market.server.api;
 
 import mega.market.server.model.ShopUnitStatisticResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,27 +18,14 @@ import javax.validation.constraints.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-06-22T11:11:10.456Z[GMT]")
 @Validated
 public interface NodeApi {
 
-    @Operation(summary = "", description = "Получение статистики (истории обновлений) по товару/категории за заданный полуинтервал [from, to). Статистика по удаленным элементам недоступна.  - цена категории - это средняя цена всех её товаров, включая товары дочерних категорий.Если категория не содержит товаров цена равна null. При обновлении цены товара, средняя цена категории, которая содержит этот товар, тоже обновляется. - можно получить статистику за всё время. ", tags={ "Дополнительные задачи" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Статистика по элементу.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ShopUnitStatisticResponse.class))),
-        
-        @ApiResponse(responseCode = "400", description = "Некорректный формат запроса или некорректные даты интервала.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "404", description = "Категория/товар не найден.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
     @RequestMapping(value = "/node/{id}/statistic",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<ShopUnitStatisticResponse> nodeIdStatisticGet(@Parameter(in = ParameterIn.PATH, description = "UUID товара/категории для которой будет отображаться статистика", required=true, schema=@Schema())
-                                                                 @PathVariable("id") UUID id,
-
-                                                                 @Parameter(in = ParameterIn.QUERY, description = "Дата и время начала интервала, для которого считается статистика. Дата должна обрабатываться согласно ISO 8601 (такой придерживается OpenAPI). Если дата не удовлетворяет данному формату, необходимо отвечать 400." ,schema=@Schema())
+    ResponseEntity<ShopUnitStatisticResponse> nodeIdStatisticGet(@PathVariable("id") UUID id,
                                                                  @Valid @RequestParam(value = "dateStart", required = false) OffsetDateTime dateStart,
-
-                                                                 @Parameter(in = ParameterIn.QUERY, description = "Дата и время конца интервала, для которого считается статистика. Дата должна обрабатываться согласно ISO 8601 (такой придерживается OpenAPI). Если дата не удовлетворяет данному формату, необходимо отвечать 400." ,schema=@Schema())
                                                                  @Valid @RequestParam(value = "dateEnd", required = false) OffsetDateTime dateEnd);
 
 }

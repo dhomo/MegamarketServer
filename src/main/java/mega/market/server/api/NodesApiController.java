@@ -2,9 +2,6 @@ package mega.market.server.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mega.market.server.model.ShopUnit;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
 import mega.market.server.service.ShopUnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.UUID;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-06-22T11:11:10.456Z[GMT]")
 @RestController
 public class NodesApiController implements NodesApi {
 
@@ -36,11 +32,8 @@ public class NodesApiController implements NodesApi {
         this.shopUnitService = shopUnitService;
     }
 
-    public ResponseEntity<ShopUnit> nodesIdGet(@Parameter(in = ParameterIn.PATH, description = "Идентификатор элемента", required = true, schema = @Schema()) @PathVariable("id") String id) {
-        String accept = request.getHeader("Accept");
+    public ResponseEntity<ShopUnit> nodesIdGet(@PathVariable("id") String id) {
         try {
-            if (accept == null || !accept.contains("application/json")) throw new RuntimeException();
-
             UUID uuid = UUID.fromString(id);
             ShopUnit shopUnit = shopUnitService.getShopUnit(uuid);
 
@@ -50,8 +43,7 @@ public class NodesApiController implements NodesApi {
                 return new ResponseEntity("{\n  \"code\": 404,\n  \"message\": \"Item not found\"\n}", HttpStatus.NOT_FOUND);
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return new ResponseEntity("{\n  \"code\": 400,\n  \"message\": \"Validation Failed\"\n}", HttpStatus.BAD_REQUEST);
         }
     }

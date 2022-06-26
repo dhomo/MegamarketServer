@@ -2,9 +2,6 @@ package mega.market.server.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mega.market.server.model.ShopUnitStatisticResponse;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,7 +15,6 @@ import javax.validation.constraints.*;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-06-22T11:11:10.456Z[GMT]")
 @RestController
 public class SalesApiController implements SalesApi {
 
@@ -34,18 +30,13 @@ public class SalesApiController implements SalesApi {
         this.request = request;
     }
 
-    public ResponseEntity<ShopUnitStatisticResponse> salesGet(@NotNull @Parameter(in = ParameterIn.QUERY, description = "Дата и время запроса. Дата должна обрабатываться согласно ISO 8601 (такой придерживается OpenAPI). Если дата не удовлетворяет данному формату, необходимо отвечать 400" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "date", required = true) OffsetDateTime date) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<ShopUnitStatisticResponse>(objectMapper.readValue("{\n  \"items\" : [ {\n    \"id\" : \"3fa85f64-5717-4562-b3fc-2c963f66a444\",\n    \"name\" : \"Оффер\",\n    \"date\" : \"2022-05-28T21:12:01.000Z\",\n    \"parentId\" : \"3fa85f64-5717-4562-b3fc-2c963f66a333\",\n    \"price\" : 234,\n    \"type\" : \"OFFER\"\n  }, {\n    \"id\" : \"3fa85f64-5717-4562-b3fc-2c963f66a444\",\n    \"name\" : \"Оффер\",\n    \"date\" : \"2022-05-28T21:12:01.000Z\",\n    \"parentId\" : \"3fa85f64-5717-4562-b3fc-2c963f66a333\",\n    \"price\" : 234,\n    \"type\" : \"OFFER\"\n  } ]\n}", ShopUnitStatisticResponse.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<ShopUnitStatisticResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+    public ResponseEntity<ShopUnitStatisticResponse> salesGet(@NotNull @Valid @RequestParam(value = "date", required = true) OffsetDateTime date) {
+        try {
+            return new ResponseEntity<ShopUnitStatisticResponse>(objectMapper.readValue("{\n  \"items\" : [ {\n    \"id\" : \"3fa85f64-5717-4562-b3fc-2c963f66a444\",\n    \"name\" : \"Оффер\",\n    \"date\" : \"2022-05-28T21:12:01.000Z\",\n    \"parentId\" : \"3fa85f64-5717-4562-b3fc-2c963f66a333\",\n    \"price\" : 234,\n    \"type\" : \"OFFER\"\n  }, {\n    \"id\" : \"3fa85f64-5717-4562-b3fc-2c963f66a444\",\n    \"name\" : \"Оффер\",\n    \"date\" : \"2022-05-28T21:12:01.000Z\",\n    \"parentId\" : \"3fa85f64-5717-4562-b3fc-2c963f66a333\",\n    \"price\" : 234,\n    \"type\" : \"OFFER\"\n  } ]\n}", ShopUnitStatisticResponse.class), HttpStatus.NOT_IMPLEMENTED);
+        } catch (IOException e) {
+            log.error("Couldn't serialize response for content type application/json", e);
+            return new ResponseEntity<ShopUnitStatisticResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<ShopUnitStatisticResponse>(HttpStatus.NOT_IMPLEMENTED);
     }
 
 }
