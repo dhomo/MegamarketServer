@@ -1,0 +1,23 @@
+- hosts: 10.20.0.219
+  user: root
+  tasks:
+    - name: Gathering facts
+      hosts: all
+      become: yes
+      gather_facts: yes
+
+    - name: Install docker
+      hosts: docker
+      become: yes
+      gather_facts: no
+      roles:
+        - docker
+
+    - name: start nginx every bootup
+      service: name=nginx state=started enabled=yes
+
+    - name: do something in the shell
+      shell: java -jar /home/ubuntu/server-0.0.1-SNAPSHOT.jar
+
+    - name: install bundler
+      gem: name=bundler state=latest
