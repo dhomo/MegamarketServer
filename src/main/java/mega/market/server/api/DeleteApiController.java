@@ -1,6 +1,7 @@
 package mega.market.server.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import mega.market.server.service.ShopUnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +21,26 @@ public class DeleteApiController implements DeleteApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+    private final ShopUnitService shopUnitService;
 
     @Autowired
-    public DeleteApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public DeleteApiController(ObjectMapper objectMapper, HttpServletRequest request, ShopUnitService shopUnitService) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.shopUnitService = shopUnitService;
     }
 
     public ResponseEntity<Void> deleteIdDelete(String id) {
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        try {
+            UUID uuid = UUID.fromString(id);
+            shopUnitService.deleteShopUnit(uuid);
+        } catch (UnsupportedOperationException ex) {
+            return new ResponseEntity("{\n  \"code\": 404,\n  \"message\": \"Item not found\"\n}", HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
+            return new ResponseEntity("{\n  \"code\": 400,\n  \"message\": \"Validation Failed\"\n}", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

@@ -22,9 +22,22 @@ public class ShopUnitService {
         this.shopUnitRepository = shopUnitRepository;
     }
 
+    @Transactional
     public void deleteShopUnit(UUID id) {
+        ShopUnit shopUnit = shopUnitRepository.findById(id).orElseThrow(UnsupportedOperationException::new);
 
-        shopUnitRepository.deleteById(id);
+        if (shopUnit.getParentId() != null) {
+            ShopUnit parent = shopUnitRepository.findById(shopUnit.getParentId()).orElseThrow();
+            parent.getChildren().remove(shopUnit);
+
+            Set<ShopUnit> updatedCategorySet = new HashSet<ShopUnit>();
+            recalcPrice(updatedCategorySet, parent, null);
+            shopUnitRepository.saveAll(updatedCategorySet);
+
+            shopUnitRepository.deleteById(id);
+        } else {
+            shopUnitRepository.deleteById(id);
+        }
     }
 
     public ShopUnit getShopUnit(UUID id) {
