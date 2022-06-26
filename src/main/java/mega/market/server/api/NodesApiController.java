@@ -38,15 +38,16 @@ public class NodesApiController implements NodesApi {
 
     public ResponseEntity<ShopUnit> nodesIdGet(@Parameter(in = ParameterIn.PATH, description = "Идентификатор элемента", required = true, schema = @Schema()) @PathVariable("id") UUID id) {
         String accept = request.getHeader("Accept");
-        if (accept == null || !accept.contains("application/json"))
-            return new ResponseEntity("{\n  \"code\": 400,\n  \"message\": \"Validation Failed\"\n}", HttpStatus.BAD_REQUEST);
+        try {
+            if (accept == null || !accept.contains("application/json")) throw new RuntimeException();
 
         ShopUnit shopUnit = shopUnitService.getShopUnit(id);
 
-        if (shopUnit != null) {
-            return new ResponseEntity<ShopUnit>(shopUnit, HttpStatus.OK);
-        } else {
-            return new ResponseEntity("{\n  \"code\": 404,\n  \"message\": \"Item not found\"\n}", HttpStatus.NOT_FOUND);
+            if (shopUnit != null) {
+                return new ResponseEntity<ShopUnit>(shopUnit, HttpStatus.OK);
+            } else {
+                return new ResponseEntity("{\n  \"code\": 404,\n  \"message\": \"Item not found\"\n}", HttpStatus.NOT_FOUND);
+            }
         }
     }
 

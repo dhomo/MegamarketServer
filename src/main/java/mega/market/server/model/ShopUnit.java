@@ -1,5 +1,6 @@
 package mega.market.server.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import java.util.*;
 @Setter
 @Validated
 @Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 //@Table(name = "shop_unit")
 public class ShopUnit {
     /**
@@ -89,6 +91,13 @@ public class ShopUnit {
     @Valid
     @OneToMany(fetch = FetchType.LAZY)
     private Set<ShopUnit> children = null;
+
+    public Set<ShopUnit> getChildren() {
+        if (type == ShopUnitType.OFFER)
+            return null;
+        else
+            return children;
+    }
 
     public ShopUnit addChildrenItem(ShopUnit childrenItem) {
         if (this.children == null) {
