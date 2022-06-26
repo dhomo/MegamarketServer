@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.IOException;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @RestController
@@ -33,10 +33,11 @@ public class NodeApiController implements NodeApi {
     }
 
     public ResponseEntity<ShopUnitStatisticResponse> nodeIdStatisticGet(@PathVariable("id") UUID id,
-                                                                        @Valid @RequestParam(value = "dateStart", required = false) OffsetDateTime dateStart,
-                                                                        @Valid @RequestParam(value = "dateEnd", required = false) OffsetDateTime dateEnd) {
+                                                                        @Valid @RequestParam(value = "dateStart", required = false) Instant dateStart,
+                                                                        @Valid @RequestParam(value = "dateEnd", required = false) Instant dateEnd) {
         try {
             return new ResponseEntity<ShopUnitStatisticResponse>(objectMapper.readValue("{\n  \"items\" : [ {\n    \"id\" : \"3fa85f64-5717-4562-b3fc-2c963f66a444\",\n    \"name\" : \"Оффер\",\n    \"date\" : \"2022-05-28T21:12:01.000Z\",\n    \"parentId\" : \"3fa85f64-5717-4562-b3fc-2c963f66a333\",\n    \"price\" : 234,\n    \"type\" : \"OFFER\"\n  }, {\n    \"id\" : \"3fa85f64-5717-4562-b3fc-2c963f66a444\",\n    \"name\" : \"Оффер\",\n    \"date\" : \"2022-05-28T21:12:01.000Z\",\n    \"parentId\" : \"3fa85f64-5717-4562-b3fc-2c963f66a333\",\n    \"price\" : 234,\n    \"type\" : \"OFFER\"\n  } ]\n}", ShopUnitStatisticResponse.class), HttpStatus.NOT_IMPLEMENTED);
+
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
             return new ResponseEntity<ShopUnitStatisticResponse>(HttpStatus.INTERNAL_SERVER_ERROR);

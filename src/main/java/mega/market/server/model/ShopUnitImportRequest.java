@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -21,5 +22,5 @@ public class ShopUnitImportRequest {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @NotNull // почему-то не работает
     @Valid
-    private OffsetDateTime updateDate;
+    private Instant updateDate;
 }

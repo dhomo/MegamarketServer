@@ -3,6 +3,7 @@ package mega.market.server.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,18 +12,17 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.*;
 
 /**
  * ShopUnit
  */
-@Getter
-@Setter
+@Data
 @Validated
 @Entity
-@JsonInclude(JsonInclude.Include.NON_NULL)
-//@Table(name = "shop_unit")
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShopUnit {
     /**
      * Уникальный идентфикатор
@@ -49,11 +49,11 @@ public class ShopUnit {
      *
      * @return date
      **/
-//    @Schema(example = "2022-05-28T21:12:01.000Z", required = true, description = "Время последнего обновления элемента.")
+    @Schema(example = "2022-05-28T21:12:01.000Z", required = true, description = "Время последнего обновления элемента.")
     @NotNull
     @Valid
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private OffsetDateTime date;
+    private Instant date;
 
     /**
      * UUID родительской категории
@@ -124,30 +124,4 @@ public class ShopUnit {
         return Objects.hash(id);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class ShopUnit {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("    date: ").append(toIndentedString(date)).append("\n");
-        sb.append("    parent: ").append(toIndentedString(parentId)).append("\n");
-        sb.append("    type: ").append(toIndentedString(type)).append("\n");
-        sb.append("    price: ").append(toIndentedString(price)).append("\n");
-        sb.append("    children: ").append(toIndentedString(children)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
 }

@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 @Validated
 public interface SalesApi {
 
     @RequestMapping(value = "/sales", produces = {"application/json"}, method = RequestMethod.GET)
-    ResponseEntity<ShopUnitStatisticResponse> salesGet(@NotNull @Valid @RequestParam(value = "date", required = true) OffsetDateTime date);
+    ResponseEntity<ShopUnitStatisticResponse> salesGet(@NotNull @Valid @RequestParam(value = "date", required = true) Instant date);
 
 }
 

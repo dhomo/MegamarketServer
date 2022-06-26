@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Validated
@@ -25,8 +25,8 @@ public interface NodeApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<ShopUnitStatisticResponse> nodeIdStatisticGet(@PathVariable("id") UUID id,
-                                                                 @Valid @RequestParam(value = "dateStart", required = false) OffsetDateTime dateStart,
-                                                                 @Valid @RequestParam(value = "dateEnd", required = false) OffsetDateTime dateEnd);
+                                                                 @Valid @RequestParam(value = "dateStart", required = false) Instant dateStart,
+                                                                 @Valid @RequestParam(value = "dateEnd", required = false) Instant dateEnd);
 
 }
 
