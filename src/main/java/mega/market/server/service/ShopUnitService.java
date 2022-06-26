@@ -23,6 +23,7 @@ public class ShopUnitService {
     }
 
     public void deleteShopUnit(UUID id) {
+
         shopUnitRepository.deleteById(id);
     }
 
@@ -32,7 +33,9 @@ public class ShopUnitService {
 
     @Transactional
     public void imports(ShopUnitImportRequest shopUnitImportRequest) throws Exception {
-        OffsetDateTime updateDate = shopUnitImportRequest.getUpdateDate();
+        // пока не починю валидацию даты NOT_NULL пусть будет так
+        OffsetDateTime updateDate = Optional.of(shopUnitImportRequest.getUpdateDate()).orElseThrow();
+
         // сначала пачкой добавляем и обновляем все что получили, не вникая в структуру
         // иначе можно нарваться на добавление чилдрена раньше парента
         Map<UUID, ShopUnit> shopUnitSet = new HashMap<UUID, ShopUnit>();
@@ -112,7 +115,9 @@ public class ShopUnitService {
             }
             category.setPrice(sum / nullPriceFilteredSet.size());
         }
-        category.setDate(updateDate);
+        if (updateDate != null){
+            category.setDate(updateDate);
+        }
         if (category.getParentId() != null) {
             recalcPrice(updatedCategorySet, shopUnitRepository.findById(category.getParentId()).orElseThrow(), updateDate);
         }
