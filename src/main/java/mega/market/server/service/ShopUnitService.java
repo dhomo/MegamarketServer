@@ -27,8 +27,7 @@ public class ShopUnitService {
     }
 
     public ShopUnit getShopUnit(UUID id) {
-        shopUnitRepository.findById(id);
-        return null;
+        return shopUnitRepository.findById(id).orElse(null);
     }
 
     @Transactional
@@ -41,11 +40,11 @@ public class ShopUnitService {
             for (ShopUnitImport shopUnitImport : shopUnitImportRequest.getItems()) {
                 ShopUnit shopUnit = shopUnitRepository.findById(shopUnitImport.getId()).orElse(new ShopUnit());
 //                у категорий поле price должно содержать null
-                if (shopUnitImport.getType() == ShopUnitType.CATEGORY && shopUnitImport.getPrice() != null){
+                if (shopUnitImport.getType() == ShopUnitType.CATEGORY && shopUnitImport.getPrice() != null) {
                     throw new Exception();
                 }
 //                цена товара не может быть null и должна быть больше либо равна нулю.
-                if (shopUnitImport.getType() == ShopUnitType.OFFER && (shopUnitImport.getPrice() == null || shopUnitImport.getPrice() < 0)){
+                if (shopUnitImport.getType() == ShopUnitType.OFFER && (shopUnitImport.getPrice() == null || shopUnitImport.getPrice() < 0)) {
                     throw new Exception();
                 }
                 //  Изменение типа элемента с товара на категорию или с категории на товар не допускается.
