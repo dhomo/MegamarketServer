@@ -38,8 +38,12 @@ public class ImportsApiController implements ImportsApi {
 
     public ResponseEntity importsPost(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody ShopUnitImportRequest body) {
         String accept = request.getHeader("Accept");
-
-        return shopUnitService.imports(body) ? new ResponseEntity(HttpStatus.OK) : new ResponseEntity("{\n  \"code\": 400,\n  \"message\": \"Validation Failed\"\n}", HttpStatus.BAD_REQUEST);
+        try {
+            shopUnitService.imports(body);
+        } catch (Exception e){
+            return new ResponseEntity("{\n  \"code\": 400,\n  \"message\": \"Validation Failed\"\n}", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }
