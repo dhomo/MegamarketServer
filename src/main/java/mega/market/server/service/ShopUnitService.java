@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,20 +26,18 @@ public class ShopUnitService {
         shopUnitRepository.deleteById(id);
     }
 
-    ;
-
     public ShopUnit getShopUnit(UUID id) {
         shopUnitRepository.findById(id);
         return null;
     }
 
-    //    @Transactional
+    @Transactional
     public boolean imports(ShopUnitImportRequest shopUnitImportRequest) {
         try {
             OffsetDateTime updateDate = shopUnitImportRequest.getUpdateDate();
             // сначала пачкой добавляем и обновляем все что получили, не вникая в структуру
             // иначе можно нарваться на добавление чилдрена раньше парента
-            Set<ShopUnit> shopUnitSet = new HashSet<ShopUnit>();
+            Map<UUID, ShopUnit> shopUnitSet = new HashMap<UUID, ShopUnit>();
             for (ShopUnitImport shopUnitImport : shopUnitImportRequest.getItems()) {
                 ShopUnit shopUnit = shopUnitRepository.findById(shopUnitImport.getId()).orElse(new ShopUnit());
 //                у категорий поле price должно содержать null
@@ -62,16 +58,15 @@ public class ShopUnitService {
                 shopUnit.setName(shopUnitImport.getName());
                 shopUnit.setDate(updateDate);
 
-                shopUnitSet.add(shopUnit);
+                shopUnitSet.put(shopUnitImport.getId(), shopUnit);
             }
-            shopUnitRepository.saveAllAndFlush(shopUnitSet);
+            shopUnitRepository.saveAllAndFlush(shopUnitSet.values());
 
 
             // а сейчас начинаем разираться со cтруктурой
             Set<ShopUnit> shopRootCategorySet = new HashSet<ShopUnit>();
             for (ShopUnitImport shopUnitImport : shopUnitImportRequest.getItems()) {
-                // TODO: возможно для скорости лучше shopUnitSet превратить в Map и искать в нем
-                ShopUnit shopUnit = shopUnitRepository.findById(shopUnitImport.getId()).orElseThrow();
+                ShopUnit shopUnit = shopUnitSet.get(shopUnitImport.getId());
 
                 // обрабатываем изменение парента
                 ShopUnit oldParent = shopUnit.getParent();
@@ -97,7 +92,7 @@ public class ShopUnitService {
             }
             // может попасть null , убираем его
             shopRootCategorySet.remove(null);
-            shopUnitRepository.saveAll(shopRootCategorySet);
+            shopUnitRepository.saveAllAndFlush(shopRootCategorySet);
 
         } catch (Exception e) {
             return false;
