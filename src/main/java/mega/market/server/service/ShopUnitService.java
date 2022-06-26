@@ -39,17 +39,14 @@ public class ShopUnitService {
             Map<UUID, ShopUnit> shopUnitSet = new HashMap<UUID, ShopUnit>();
             for (ShopUnitImport shopUnitImport : shopUnitImportRequest.getItems()) {
                 ShopUnit shopUnit = shopUnitRepository.findById(shopUnitImport.getId()).orElse(new ShopUnit());
-//                у категорий поле price должно содержать null
                 if (shopUnitImport.getType() == ShopUnitType.CATEGORY && shopUnitImport.getPrice() != null) {
-                    throw new Exception();
+                    throw new Exception("у категорий поле price должно содержать null");
                 }
-//                цена товара не может быть null и должна быть больше либо равна нулю.
                 if (shopUnitImport.getType() == ShopUnitType.OFFER && (shopUnitImport.getPrice() == null || shopUnitImport.getPrice() < 0)) {
-                    throw new Exception();
+                    throw new Exception("цена товара не может быть null и должна быть больше либо равна нулю.");
                 }
-                //  Изменение типа элемента с товара на категорию или с категории на товар не допускается.
                 if (shopUnit.getType() != null && shopUnit.getType() != shopUnitImport.getType()) {
-                    throw new Exception();
+                    throw new Exception("Изменение типа элемента с товара на категорию или с категории на товар не допускается.");
                 }
                 shopUnit.setPrice(shopUnitImport.getPrice());
                 shopUnit.setId(shopUnitImport.getId());
@@ -79,6 +76,9 @@ public class ShopUnitService {
                 } else {
                     shopUnit.setParent(newParent);
                     if (newParent != null) {
+                        if (newParent.getType() == ShopUnitType.OFFER){
+                            throw new RuntimeException("родителем товара или категории может быть только категория");
+                        }
                         //TODO проверить, возможно это лишнее
                         newParent.addChildrenItem(shopUnit);
                     }
