@@ -27,7 +27,7 @@ public class DeleteApiController implements DeleteApi {
         this.request = request;
     }
 
-    public ResponseEntity<Void> deleteIdDelete(UUID id) {
+    public ResponseEntity<Void> deleteIdDelete(String id) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }

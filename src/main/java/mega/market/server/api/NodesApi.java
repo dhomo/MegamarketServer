@@ -36,7 +36,7 @@ public interface NodesApi {
     @RequestMapping(value = "/nodes/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<ShopUnit> nodesIdGet(@Parameter(in = ParameterIn.PATH, description = "Идентификатор элемента", required=true, schema=@Schema()) @PathVariable("id") UUID id);
+    ResponseEntity<ShopUnit> nodesIdGet(@Parameter(in = ParameterIn.PATH, description = "Идентификатор элемента", required=true, schema=@Schema()) @PathVariable("id") String id);
 
 }
 

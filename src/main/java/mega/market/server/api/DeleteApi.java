@@ -45,7 +45,7 @@ public interface DeleteApi {
                                                     required = true,
                                                     example = "3fa85f64-5717-4562-b3fc-2c963f66a333",
                                                     schema = @Schema(type= "string", format= "uuid"))
-                                        @PathVariable("id") UUID id);
+                                        @PathVariable("id") String id);
 
 }
 
