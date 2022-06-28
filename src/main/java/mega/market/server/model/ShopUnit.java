@@ -24,70 +24,28 @@ import java.util.*;
 @Entity
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShopUnit {
-    /**
-     * Уникальный идентфикатор
-     *
-     * @return id
-     **/
-    @Schema(example = "3fa85f64-5717-4562-b3fc-2c963f66a333", required = true, description = "Уникальный идентфикатор")
     @Valid
     @NotNull
     @Id
     private UUID id;
 
-    /**
-     * Имя категории
-     *
-     * @return name
-     **/
-    @Schema(required = true, description = "Имя категории")
     @NotNull
-    private String name = "";
+    private String name;
 
-    /**
-     * Время последнего обновления элемента.
-     *
-     * @return date
-     **/
-    @Schema(example = "2022-05-28T21:12:01.000Z", required = true, description = "Время последнего обновления элемента.")
     @NotNull
     @Valid
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Instant date;
 
-    /**
-     * UUID родительской категории
-     *
-     * @return parentId
-     **/
-    @Schema(example = "3fa85f64-5717-4562-b3fc-2c963f66a333", description = "UUID родительской категории")
     @Valid
     private UUID parentId;
 
-    /**
-     * Get type
-     *
-     * @return type
-     **/
-    @Schema(required = true, description = "")
     @NotNull
     @Valid
-    private ShopUnitType type = null;
+    private ShopUnitType type;
 
-    /**
-     * Целое число, для категории - это средняя цена всех дочерних товаров(включая товары подкатегорий). Если цена является не целым числом, округляется в меньшую сторону до целого числа. Если категория не содержит товаров цена равна null.
-     *
-     * @return price
-     **/
-    @Schema(description = "Целое число, для категории - это средняя цена всех дочерних товаров(включая товары подкатегорий). Если цена является не целым числом, округляется в меньшую сторону до целого числа. Если категория не содержит товаров цена равна null.")
-    private Long price = null;
+    private Long price;
 
-    /**
-     * Список всех дочерних товаров\\категорий. Для товаров поле равно null.
-     *
-     * @return children
-     **/
-    @Schema(description = "Список всех дочерних товаров\\категорий. Для товаров поле равно null.")
     @Valid
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ShopUnit> children = new LinkedHashSet<>();
