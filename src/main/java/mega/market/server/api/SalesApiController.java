@@ -23,19 +23,20 @@ public class SalesApiController implements SalesApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+    private final ShopUnitService shopUnitService;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public SalesApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public SalesApiController(ObjectMapper objectMapper, HttpServletRequest request, ShopUnitService shopUnitService) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.shopUnitService = shopUnitService;
     }
 
     public ResponseEntity<ShopUnitStatisticResponse> salesGet(@NotNull @Valid @RequestParam(value = "date", required = true) Instant date) {
         try {
             return new ResponseEntity<ShopUnitStatisticResponse>(objectMapper.readValue("{\n  \"items\" : [ {\n    \"id\" : \"3fa85f64-5717-4562-b3fc-2c963f66a444\",\n    \"name\" : \"Оффер\",\n    \"date\" : \"2022-05-28T21:12:01.000Z\",\n    \"parentId\" : \"3fa85f64-5717-4562-b3fc-2c963f66a333\",\n    \"price\" : 234,\n    \"type\" : \"OFFER\"\n  }, {\n    \"id\" : \"3fa85f64-5717-4562-b3fc-2c963f66a444\",\n    \"name\" : \"Оффер\",\n    \"date\" : \"2022-05-28T21:12:01.000Z\",\n    \"parentId\" : \"3fa85f64-5717-4562-b3fc-2c963f66a333\",\n    \"price\" : 234,\n    \"type\" : \"OFFER\"\n  } ]\n}", ShopUnitStatisticResponse.class), HttpStatus.NOT_IMPLEMENTED);
         } catch (IOException e) {
-            log.error("Couldn't serialize response for content type application/json", e);
-            return new ResponseEntity<ShopUnitStatisticResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity("{\n  \"code\": 400,\n  \"message\": \"Validation Failed\"\n}", HttpStatus.BAD_REQUEST);
         }
     }
 
