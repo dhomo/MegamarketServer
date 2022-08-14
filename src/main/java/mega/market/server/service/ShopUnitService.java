@@ -1,27 +1,23 @@
 package mega.market.server.service;
 
+import lombok.RequiredArgsConstructor;
 import mega.market.server.dao.ShopUnitRepository;
-import mega.market.server.model.ShopUnit;
-import mega.market.server.model.ShopUnitImport;
-import mega.market.server.model.ShopUnitImportRequest;
-import mega.market.server.model.ShopUnitType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
+import mega.market.server.model.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ShopUnitService {
 
     private final ShopUnitRepository shopUnitRepository;
 
-    public ShopUnitService(ShopUnitRepository shopUnitRepository) {
-        this.shopUnitRepository = shopUnitRepository;
+
+    public Set<ShopUnitStatisticUnit> sales(Instant date){
+        return shopUnitRepository.sales(date);
     }
 
     @Transactional

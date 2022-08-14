@@ -1,6 +1,7 @@
 package mega.market.server.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import mega.market.server.model.ShopUnitImportRequest;
 import mega.market.server.service.ShopUnitService;
 import org.slf4j.Logger;
@@ -19,22 +20,14 @@ import javax.validation.constraints.*;
 
 
 @RestController
+@RequiredArgsConstructor
 public class ImportsApiController implements ImportsApi {
 
     private static final Logger log = LoggerFactory.getLogger(ImportsApiController.class);
-
     private final ObjectMapper objectMapper;
-
     private final HttpServletRequest request;
-
     private final ShopUnitService shopUnitService;
 
-    @Autowired
-    public ImportsApiController(ObjectMapper objectMapper, HttpServletRequest request, ShopUnitService shopUnitService) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-        this.shopUnitService = shopUnitService;
-    }
 
     public ResponseEntity importsPost(@Valid @RequestBody ShopUnitImportRequest body) {
         try {

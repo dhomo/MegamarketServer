@@ -1,6 +1,7 @@
 package mega.market.server.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import mega.market.server.model.ShopUnitStatisticResponse;
 import mega.market.server.model.ShopUnitStatisticUnit;
 import mega.market.server.service.ShopUnitService;
@@ -19,21 +20,14 @@ import java.time.Instant;
 import java.util.Set;
 
 @RestController
+@RequiredArgsConstructor
 public class SalesApiController implements SalesApi {
 
     private static final Logger log = LoggerFactory.getLogger(SalesApiController.class);
-
     private final ObjectMapper objectMapper;
-
     private final HttpServletRequest request;
     private final ShopUnitService shopUnitService;
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public SalesApiController(ObjectMapper objectMapper, HttpServletRequest request, ShopUnitService shopUnitService) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-        this.shopUnitService = shopUnitService;
-    }
 
     public ResponseEntity<ShopUnitStatisticResponse> salesGet(@NotNull @Valid @RequestParam(value = "date", required = true) Instant date) {
         try {
