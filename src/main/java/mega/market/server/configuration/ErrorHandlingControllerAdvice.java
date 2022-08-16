@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @RestControllerAdvice
 public class ErrorHandlingControllerAdvice {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageConversionException.class, HttpMediaTypeException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class,
+            HttpMessageConversionException.class,
+            HttpMediaTypeException.class,
+            IllegalArgumentException.class})
     public ResponseEntity handleException400(Exception exception) {
         return handleException(new AppException(HttpStatus.BAD_REQUEST, "Validation Failed"));
     }
