@@ -2,13 +2,14 @@ package mega.market.server.model;
 
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.UUID;
 
 /**
  * ShopUnitImport
  */
-@Validated
 @Data
 public class ShopUnitImport {
 

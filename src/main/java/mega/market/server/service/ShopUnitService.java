@@ -40,8 +40,7 @@ public class ShopUnitService {
 
     @Transactional
     public void imports(ShopUnitImportRequest shopUnitImportRequest) throws Exception {
-        // пока не починю валидацию даты NOT_NULL пусть будет так
-        Instant updateDate = Optional.of(shopUnitImportRequest.getUpdateDate()).orElseThrow();
+        Instant updateDate = shopUnitImportRequest.getUpdateDate();
 
         // сначала пачкой добавляем и обновляем все что получили, не вникая в структуру
         // иначе можно нарваться на добавление чилдрена раньше парента
