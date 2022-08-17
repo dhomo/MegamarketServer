@@ -1,27 +1,30 @@
 package mega.market.server.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 
 @Configuration
 public class JacksonConfiguration {
 
-//  @Bean
-//  @Primary
-//  public ObjectMapper objectMapper() {
-//    ObjectMapper objectMapper = JsonMapper.builder()
-//            .addModule(new JavaTimeModule())
-//            .build();
-//
-////    ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-//
-//    return objectMapper;
-//  }
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
+        return builder -> builder.serializers(new CustomInstantSerializer());
+    }
+
+    private static class CustomInstantSerializer extends InstantSerializer {
+
+        private static final DateTimeFormatter UTC_DATE_FORMAT = DateTimeFormatter
+                .ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(ZoneOffset.UTC);
+
+        private CustomInstantSerializer() {
+            super(InstantSerializer.INSTANCE, null, UTC_DATE_FORMAT);
+        }
+
+    }
 }
