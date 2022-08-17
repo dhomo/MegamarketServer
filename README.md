@@ -11,8 +11,8 @@ CI CD заключался в том что вручную закинул jar и
 
 
 TODO (несортированый)
-1. Централизовано генерировать ответ с ошибкой. Для начала https://www.baeldung.com/global-error-handler-in-a-spring-rest-api
-2. Валидацию данных 
+~~1. Централизовано генерировать ответ с ошибкой. Для начала https://www.baeldung.com/global-error-handler-in-a-spring-rest-api~~
+~~2. Валидацию данных ~~
 3. ShopUnitService отрефакторить
 4. Реализовать дополнительные задачи из спецификации
 5. Настроить CI CD
