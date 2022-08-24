@@ -1,21 +1,29 @@
 package mega.market.server.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * ShopUnit
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Validated
 @Entity
 //@JsonInclude(JsonInclude.Include.NON_NULL)
@@ -41,6 +49,7 @@ public class ShopUnit {
 
     @Valid
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parent")
+    @ToString.Exclude
     private Set<ShopUnit> children = new HashSet<>();
 
     public Set<ShopUnit> getChildren() {
@@ -60,19 +69,14 @@ public class ShopUnit {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         ShopUnit shopUnit = (ShopUnit) o;
-        return Objects.equals(this.id, shopUnit.id);
+        return id != null && Objects.equals(id, shopUnit.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return getClass().hashCode();
     }
-
 }
