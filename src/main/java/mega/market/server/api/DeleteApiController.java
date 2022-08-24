@@ -27,11 +27,7 @@ public class DeleteApiController
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteIdDelete(@PathVariable("id") UUID id) {
-        try {
-            shopUnitService.deleteShopUnit(id);
-        } catch (UnsupportedOperationException ex) {
-            throw new AppException(HttpStatus.NOT_FOUND, "Item not found");
-        }
+        shopUnitService.deleteShopUnit(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 

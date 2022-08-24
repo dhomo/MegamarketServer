@@ -19,4 +19,12 @@ public class AppException extends RuntimeException {
         return () -> new AppException(code, message);
     }
 
+    public static Supplier<AppException> appExceptionNotFound() {
+        return () -> new AppException(HttpStatus.NOT_FOUND, "Item not found");
+    }
+
+    public static Supplier<AppException> appExceptionValidationFailed() {
+        return () -> new AppException(HttpStatus.BAD_REQUEST, "Validation Failed");
+    }
+
 }

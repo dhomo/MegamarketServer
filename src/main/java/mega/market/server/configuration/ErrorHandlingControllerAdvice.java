@@ -18,7 +18,7 @@ public class ErrorHandlingControllerAdvice {
             HttpMessageConversionException.class,
             HttpMediaTypeException.class,
             IllegalArgumentException.class})
-    public ResponseEntity handleException400(Exception exception) {
+    public ResponseEntity handleException400() {
         return handleException(new AppException(HttpStatus.BAD_REQUEST, "Validation Failed"));
     }
 

@@ -2,12 +2,16 @@ package mega.market.server.service;
 
 import lombok.RequiredArgsConstructor;
 import mega.market.server.dao.ShopUnitRepository;
+import mega.market.server.exception.AppException;
 import mega.market.server.model.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.*;
+
+import static mega.market.server.exception.AppException.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +26,10 @@ public class ShopUnitService {
 
     @Transactional
     public void deleteShopUnit(UUID id) {
-        ShopUnit shopUnit = shopUnitRepository.findById(id).orElseThrow(UnsupportedOperationException::new);
+        ShopUnit shopUnit = shopUnitRepository.findById(id).orElseThrow(appExceptionNotFound());
 
         if (shopUnit.getParentId() != null) {
-            ShopUnit parent = shopUnitRepository.findById(shopUnit.getParentId()).orElseThrow();
+            ShopUnit parent = shopUnitRepository.findById(shopUnit.getParentId()).orElseThrow(appExceptionValidationFailed());
             parent.getChildren().remove(shopUnit);
             recalcPrice(parent, null);
             shopUnitRepository.deleteById(id);
@@ -35,7 +39,7 @@ public class ShopUnitService {
     }
 
     public ShopUnit getShopUnit(UUID id) {
-        return shopUnitRepository.findById(id).orElse(null);
+        return shopUnitRepository.findById(id).orElseThrow(appExceptionNotFound());
     }
 
     @Transactional
