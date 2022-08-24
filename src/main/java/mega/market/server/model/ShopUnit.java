@@ -20,7 +20,7 @@ import java.util.*;
 @Entity
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShopUnit {
-    @Valid
+
     @NotNull
     @Id
     private UUID id;
@@ -29,22 +29,19 @@ public class ShopUnit {
     private String name;
 
     @NotNull
-    @Valid
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Instant date;
 
-    @Valid
     private UUID parentId;
 
     @NotNull
-    @Valid
     private ShopUnitType type;
 
     private Long price;
 
     @Valid
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ShopUnit> children = new LinkedHashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parent")
+    private Set<ShopUnit> children = new HashSet<>();
 
     public Set<ShopUnit> getChildren() {
         if (type == ShopUnitType.OFFER)

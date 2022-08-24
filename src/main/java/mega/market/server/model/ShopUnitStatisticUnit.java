@@ -3,38 +3,30 @@ package mega.market.server.model;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.Instant;
 import java.util.UUID;
 
-/**
- * ShopUnitStatisticUnit
- */
-@Validated
 @Data
-public class ShopUnitStatisticUnit   {
-  @Valid
-  @NotNull
-  private UUID id;
+public class ShopUnitStatisticUnit {
 
-  @Valid
-  @NotNull
-  private String name;
+    @NotNull
+    private UUID id;
 
-  @Valid
-  private UUID parentId;
+    @NotNull
+    private String name;
 
-  @Valid
-  @NotNull
-  private ShopUnitType type;
+    private UUID parentId;
 
-  @Valid
-  private Long price;
+    @NotNull
+    private ShopUnitType type;
 
-  @Valid
-  @NotNull
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private Instant date;
+    private Long price;
+
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Instant date;
 
 }
