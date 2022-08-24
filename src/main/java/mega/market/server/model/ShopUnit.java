@@ -48,7 +48,7 @@ public class ShopUnit {
     private Long price;
 
     @Valid
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parent")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parentId")
     @ToString.Exclude
     private Set<ShopUnit> children = new HashSet<>();
 
