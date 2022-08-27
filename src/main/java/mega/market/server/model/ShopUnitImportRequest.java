@@ -12,6 +12,7 @@ import java.util.*;
 public class ShopUnitImportRequest {
 
     @NotNull
+    @Valid
     private Set<ShopUnitImport> items;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

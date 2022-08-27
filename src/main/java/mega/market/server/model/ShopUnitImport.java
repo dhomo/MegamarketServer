@@ -1,10 +1,13 @@
 package mega.market.server.model;
 
 import lombok.Data;
+import mega.market.server.validators.ValidShopUnitImport;
+
 import javax.validation.constraints.*;
 import java.util.UUID;
 
 @Data
+@ValidShopUnitImport
 public class ShopUnitImport {
 
     @NotNull

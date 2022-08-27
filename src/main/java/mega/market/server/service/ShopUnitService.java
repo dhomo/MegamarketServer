@@ -46,18 +46,12 @@ public class ShopUnitService {
     public void imports(ShopUnitImportRequest shopUnitImportRequest) throws Exception {
         Instant updateDate = shopUnitImportRequest.getUpdateDate();
 
-        // сначала пачкой добавляем и обновляем все что получили, не вникая в структуру
+        // сначала пачкой добавляем/обновляем все что получили, не указывая parendId
         // иначе можно нарваться на добавление чилдрена раньше парента
         Map<UUID, ShopUnit> shopUnitSet = new HashMap<>();
         Map<UUID, UUID> oldParentUUIDs = new HashMap<>();
         for (ShopUnitImport shopUnitImport : shopUnitImportRequest.getItems()) {
             ShopUnit shopUnit = shopUnitRepository.findById(shopUnitImport.getId()).orElse(new ShopUnit());
-            if (shopUnitImport.getType() == ShopUnitType.CATEGORY && shopUnitImport.getPrice() != null) {
-                throw new Exception("у категорий поле price должно содержать null");
-            }
-            if (shopUnitImport.getType() == ShopUnitType.OFFER && (shopUnitImport.getPrice() == null || shopUnitImport.getPrice() < 0)) {
-                throw new Exception("цена товара не может быть null и должна быть больше либо равна нулю.");
-            }
             if (shopUnit.getType() != null && shopUnit.getType() != shopUnitImport.getType()) {
                 throw new Exception("Изменение типа элемента с товара на категорию или с категории на товар не допускается.");
             }
