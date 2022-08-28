@@ -15,7 +15,7 @@ public interface ShopUnitRepository extends JpaRepository<ShopUnit, UUID> {
             "    UNION select e.id, e.price, e.type from shop_unit e inner join children s on s.id = e.parent_id\n" +
             ") select avg(price) from children where id <> ?1 AND type = 0",
             nativeQuery = true)
-    long findAverage(UUID id);
+    Long findAverage(UUID id);
 
     @Query(value = "select id, name, parent_id, type, price, date from shop_unit where type = 0 and date between (date :date - interval '24 hour') and :date",
             nativeQuery = true)

@@ -3,30 +3,19 @@ package mega.market.server.model;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-/**
- * ShopUnit
- */
+
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Validated
 @Entity
-//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShopUnit {
 
     @NotNull
@@ -48,9 +37,9 @@ public class ShopUnit {
     private Long price;
 
     @Valid
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parentId")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentId", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private Set<ShopUnit> children = new HashSet<>();
+    private Set<ShopUnit> children = new LinkedHashSet<>();
 
     public Set<ShopUnit> getChildren() {
         if (type == ShopUnitType.OFFER)
@@ -61,7 +50,7 @@ public class ShopUnit {
 
     public ShopUnit addChildrenItem(ShopUnit childrenItem) {
         if (this.children == null) {
-            this.children = new HashSet<ShopUnit>();
+            this.children = new LinkedHashSet<ShopUnit>();
         }
         this.children.add(childrenItem);
         return this;
