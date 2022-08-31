@@ -1,5 +1,6 @@
 package mega.market.server.model;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
@@ -10,6 +11,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Data
+@Builder
 public class ShopUnitStatisticUnit {
 
     @NotNull

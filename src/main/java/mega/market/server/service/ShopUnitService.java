@@ -3,12 +3,12 @@ package mega.market.server.service;
 import lombok.RequiredArgsConstructor;
 import mega.market.server.dao.ShopUnitRepository;
 import mega.market.server.model.*;
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,8 +21,8 @@ public class ShopUnitService {
     private final ShopUnitRepository shopUnitRepository;
 
 
-    public Set<ShopUnitStatisticUnit> sales(Instant date) {
-        return shopUnitRepository.sales(date);
+    public Set<ShopUnit> sales(Instant date) {
+        return shopUnitRepository.findByDateBetween(date.minus(24, ChronoUnit.HOURS), date);
     }
 
     @Transactional
