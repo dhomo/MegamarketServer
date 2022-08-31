@@ -22,7 +22,7 @@ public class ShopUnitService {
 
 
     public Set<ShopUnit> sales(Instant date) {
-        return shopUnitRepository.findByDateBetween(date.minus(24, ChronoUnit.HOURS), date);
+        return shopUnitRepository.findByDateBetweenAndType(date.minus(24, ChronoUnit.HOURS), date, ShopUnitType.OFFER);
     }
 
     @Transactional

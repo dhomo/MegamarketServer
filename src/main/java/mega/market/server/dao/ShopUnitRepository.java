@@ -1,6 +1,7 @@
 package mega.market.server.dao;
 
 import mega.market.server.model.ShopUnit;
+import mega.market.server.model.ShopUnitType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -18,5 +19,5 @@ public interface ShopUnitRepository extends JpaRepository<ShopUnit, UUID> {
             """, nativeQuery = true)
     Long findAverage(UUID id);
 
-    Set<ShopUnit> findByDateBetween(Instant start, Instant end);
+    Set<ShopUnit> findByDateBetweenAndType(Instant start, Instant end, ShopUnitType type);
 }
