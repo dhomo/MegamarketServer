@@ -29,14 +29,8 @@ public class ShopUnitService {
     public void deleteShopUnit(UUID id) {
         ShopUnit shopUnit = shopUnitRepository.findById(id).orElseThrow(appExceptionNotFound());
 
-        if (shopUnit.getParentId() != null) {
-            ShopUnit parent = shopUnitRepository.findById(shopUnit.getParentId()).orElseThrow(appExceptionValidationFailed());
-            parent.getChildren().remove(shopUnit);
-            updateParentsRecursively(parent.getParentId(), null);
-            shopUnitRepository.deleteById(id);
-        } else {
-            shopUnitRepository.deleteById(id);
-        }
+        shopUnitRepository.deleteById(id);
+        updateParentsRecursively(shopUnit.getParentId(), null);
     }
 
     public ShopUnit getShopUnit(UUID id) {
@@ -113,4 +107,7 @@ public class ShopUnitService {
         else return findUpperShopUnit(items, parentId); // переходим к родительскому юниту
     }
 
+    public Set<ShopUnit> nodeIdStatisticGet(UUID id, Instant dateStart, Instant dateEnd) {
+        return shopUnitRepository.findByDateBetweenAndType(dateStart, dateEnd, ShopUnitType.OFFER);
+    }
 }
