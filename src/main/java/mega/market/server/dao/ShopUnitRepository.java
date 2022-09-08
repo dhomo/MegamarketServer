@@ -1,7 +1,7 @@
 package mega.market.server.dao;
 
-import mega.market.server.model.ShopUnit;
-import mega.market.server.model.ShopUnitType;
+import mega.market.server.domain.ShopUnit;
+import mega.market.server.DTO.ShopUnitType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

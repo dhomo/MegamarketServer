@@ -1,11 +1,9 @@
-package mega.market.server.model;
+package mega.market.server.DTO;
 
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.Instant;
 import java.util.UUID;

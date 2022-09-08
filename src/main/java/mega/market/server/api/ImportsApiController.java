@@ -3,7 +3,7 @@ package mega.market.server.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import mega.market.server.exception.AppException;
-import mega.market.server.model.ShopUnitImportRequest;
+import mega.market.server.DTO.ShopUnitImportRequest;
 import mega.market.server.service.ShopUnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

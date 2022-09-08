@@ -2,7 +2,10 @@ package mega.market.server.service;
 
 import lombok.RequiredArgsConstructor;
 import mega.market.server.dao.ShopUnitRepository;
-import mega.market.server.model.*;
+import mega.market.server.domain.*;
+import mega.market.server.DTO.ShopUnitImport;
+import mega.market.server.DTO.ShopUnitImportRequest;
+import mega.market.server.DTO.ShopUnitType;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

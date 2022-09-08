@@ -2,8 +2,7 @@ package mega.market.server.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import mega.market.server.exception.AppException;
-import mega.market.server.model.ShopUnit;
+import mega.market.server.domain.ShopUnit;
 import mega.market.server.service.ShopUnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.UUID;
 
 @RestController

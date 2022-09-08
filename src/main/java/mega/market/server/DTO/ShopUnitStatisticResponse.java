@@ -1,4 +1,4 @@
-package mega.market.server.model;
+package mega.market.server.DTO;
 
 import lombok.Data;
 import java.util.Set;

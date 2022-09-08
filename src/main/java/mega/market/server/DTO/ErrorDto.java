@@ -1,4 +1,4 @@
-package mega.market.server.model;
+package mega.market.server.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;

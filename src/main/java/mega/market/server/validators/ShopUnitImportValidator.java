@@ -1,7 +1,7 @@
 package mega.market.server.validators;
 
-import mega.market.server.model.ShopUnitImport;
-import mega.market.server.model.ShopUnitType;
+import mega.market.server.DTO.ShopUnitImport;
+import mega.market.server.DTO.ShopUnitType;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

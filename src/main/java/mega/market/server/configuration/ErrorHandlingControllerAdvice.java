@@ -1,7 +1,7 @@
 package mega.market.server.configuration;
 
 import mega.market.server.exception.AppException;
-import mega.market.server.model.ErrorDto;
+import mega.market.server.DTO.ErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;

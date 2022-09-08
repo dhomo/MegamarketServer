@@ -1,6 +1,7 @@
-package mega.market.server.model;
+package mega.market.server.domain;
 
 import lombok.*;
+import mega.market.server.DTO.ShopUnitType;
 import org.hibernate.Hibernate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -26,7 +27,7 @@ public class ShopUnit {
     private String name;
 
     @NotNull
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Instant date;
 
     private UUID parentId;

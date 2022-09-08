@@ -2,7 +2,10 @@ package mega.market.server.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import mega.market.server.model.ShopUnitStatisticResponse;
+import mega.market.server.domain.ShopUnit;
+import mega.market.server.DTO.ShopUnitStatisticResponse;
+import mega.market.server.DTO.ShopUnitStatisticUnit;
+import mega.market.server.service.ShopUnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
