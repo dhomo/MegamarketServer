@@ -4,12 +4,13 @@ import mega.market.server.domain.ShopUnit;
 import mega.market.server.DTO.ShopUnitType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.history.RevisionRepository;
 
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
-public interface ShopUnitRepository extends JpaRepository<ShopUnit, UUID> {
+public interface ShopUnitRepository extends JpaRepository<ShopUnit, UUID>, RevisionRepository<ShopUnit, UUID, Long> {
 
     @Query(value = """
             WITH RECURSIVE children AS(

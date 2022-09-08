@@ -3,6 +3,7 @@ package mega.market.server.domain;
 import lombok.*;
 import mega.market.server.DTO.ShopUnitType;
 import org.hibernate.Hibernate;
+import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.*;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@Audited
 public class ShopUnit {
 
     @NotNull
