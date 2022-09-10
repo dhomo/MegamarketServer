@@ -1,10 +1,10 @@
 package mega.market.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import mega.market.server.DTO.ShopUnitType;
 import org.hibernate.Hibernate;
 import org.hibernate.envers.Audited;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -29,9 +29,15 @@ public class ShopUnit {
     private String name;
 
     @NotNull
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Instant date;
 
+    @JsonIgnore
+    @JoinColumn(name = "parent_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private ShopUnit parent;
+
+    @Column(name = "parent_id")
     private UUID parentId;
 
     @NotNull
@@ -40,7 +46,7 @@ public class ShopUnit {
     private Long price;
 
     @Valid
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private Set<ShopUnit> children = new LinkedHashSet<>();
 
@@ -56,6 +62,13 @@ public class ShopUnit {
             this.children = new LinkedHashSet<ShopUnit>();
         }
         this.children.add(childrenItem);
+        childrenItem.setParent(this);
+        return this;
+    }
+
+    public ShopUnit removeChildrenItem(ShopUnit childrenItem) {
+        this.children.remove(childrenItem);
+        childrenItem.setParent(null);
         return this;
     }
 

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import static java.util.stream.Collectors.toSet;
@@ -40,7 +39,7 @@ public class NodeApiController {
                                                                         @Valid @RequestParam(value = "dateStart", required = false) Instant dateStart,
                                                                         @Valid @RequestParam(value = "dateEnd", required = false) Instant dateEnd) {
 
-        Set<ShopUnit> items = shopUnitService.nodeIdStatisticGet(id, dateStart, dateEnd);
+        List<ShopUnit> items = shopUnitService.nodeIdStatisticGet(id, dateStart, dateEnd);
 
         ShopUnitStatisticResponse response = new ShopUnitStatisticResponse();
         response.setItems(items.stream().map(s -> ShopUnitStatisticUnit.builder()

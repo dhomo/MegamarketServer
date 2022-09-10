@@ -1,15 +1,19 @@
 package mega.market.server.service;
 
 import lombok.RequiredArgsConstructor;
+import mega.market.server.DTO.ShopUnitStatisticUnit;
 import mega.market.server.dao.ShopUnitRepository;
 import mega.market.server.domain.*;
 import mega.market.server.DTO.ShopUnitImport;
 import mega.market.server.DTO.ShopUnitImportRequest;
 import mega.market.server.DTO.ShopUnitType;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -22,6 +26,7 @@ import static mega.market.server.exception.AppException.*;
 public class ShopUnitService {
 
     private final ShopUnitRepository shopUnitRepository;
+    private final EntityManager entityManager;
 
 
     public Set<ShopUnit> sales(Instant date) {
@@ -110,7 +115,15 @@ public class ShopUnitService {
         else return findUpperShopUnit(items, parentId); // переходим к родительскому юниту
     }
 
-    public Set<ShopUnit> nodeIdStatisticGet(UUID id, Instant dateStart, Instant dateEnd) {
-        return shopUnitRepository.findByDateBetweenAndType(dateStart, dateEnd, ShopUnitType.OFFER);
+    @SuppressWarnings("unchecked")
+    public List<ShopUnit> nodeIdStatisticGet(UUID id, Instant dateStart, Instant dateEnd) {
+        return AuditReaderFactory
+                .get(entityManager)
+                .createQuery()
+                .forRevisionsOfEntity( ShopUnitStatisticUnit.class, true, false )
+                .add(AuditEntity.property("id").eq(id))
+                .add(AuditEntity.property("date").ge(dateStart))
+                .add(AuditEntity.property("date").lt(dateEnd))
+                .getResultList();
     }
 }
